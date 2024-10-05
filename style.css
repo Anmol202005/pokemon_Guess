@@ -1,0 +1,589 @@
+*{
+    padding: 0px;
+    margin: 0;
+}
+body {
+    color: #D4D4D4;
+    font-family: 'Press Start 2P', cursive;
+    background-color: #1e1e1e; /* Fallback color */
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0.5)), url(pokeforest.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Optional: Keep background fixed on scroll */
+}
+
+header{
+    position: relative;
+    animation-name:  appear ;
+    animation-duration: 2s;
+}
+
+.logo-box{
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.img-box{
+    position: absolute;
+    left: 25%;
+    top: 10px;
+    /*animation-name: appear;
+    animation-duration: 0.75s;
+    animation-delay: 1s;
+    animation-fill-mode: backwards;*/
+}
+.text-box{
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-40%);
+}
+.primary-heading{
+    display: block;
+    text-align: center;
+    font-size: 45px;
+   /* animation-name: moveinleft;
+    animation-duration: 1s;
+    animation-timing-function: ease-in;*/
+}
+.secondary-heading{
+    display: block;
+    text-align: center;
+    font-size: 25px;
+   /* animation-name: moveinright;
+    animation-duration: 1s;
+    animation-timing-function: ease-in;*/
+    
+}
+main{
+    position: relative;
+}
+.margin-box{
+    position: absolute;
+    top:95px;
+    left:51%;
+    transform: translateX(-50%);
+    background-color: #2c2c2c; ;
+    box-shadow : 0 0 50px white;
+    border-radius: 10px;
+    
+}
+
+
+.guessimg{
+    background-color:transparent;
+    border-radius: 8px;
+    padding: 10px;
+    border-style: solid;
+    border-color:rgb(50,50,50) ;
+    width: 475px;
+    box-shadow : 0 0 50px white;
+    filter: brightness(0);
+    
+}
+.timer-box{ position: absolute;
+    top:105px;
+    left:72%;
+    border-radius: 8px;
+    background-color:#222222;
+    border-style: solid;
+    border-color: #2c2c2c;
+    height: 300px;
+    width:20px;
+    overflow: hidden;
+    /**/
+    
+    
+    background-color: #1e1e1e;
+    border: 2px solid #ffd700;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.5); /* Shadow for effect */
+    
+
+}
+
+.timer{
+    
+    height:0px;
+    width:100%;
+    background-color: #c8ff00;
+    animation-name: timer;
+    animation-duration: 15s;
+    animation-fill-mode: forwards;
+    background: linear-gradient(45deg, #ff416c, #ff4b2b); /* Gradient fill */
+    border-radius: 25px;
+    transition: height 2s ease-in-out; /* Smooth vertical progress */
+    position: absolute;
+    bottom: 0; /* Start filling from the bottom */
+}
+.timer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    filter: blur(4px);
+    opacity: 0.6;
+    transform: translateY(-100%);
+    transition: transform 2s ease-in-out;
+}
+@keyframes timer{
+    100%{
+        height: 0%;
+        
+    }
+    0%{
+        height: 100%;
+        
+    }
+}
+@keyframes moveinleft {
+    0%{ opacity: 0;
+        transform:translateX(-100px);
+    
+
+    }
+    80%{
+        
+        transform: translateX(10px);
+    }
+    100%{ opacity: 1;
+        transform: translateX(0px);
+     
+    }}
+@keyframes moveinright{
+    0%{ opacity: 0;
+     transform: translateX(100px);
+        }
+     80%{
+            
+     transform: translateX(-10px);
+        }
+     100%{ opacity: 1;
+     transform: translateX(0px);
+    
+        }}
+@keyframes appear{
+    0%{opacity:0;}
+    100%{opacity:1}
+}  
+@keyframes moveinbottom{
+    0%{ opacity: 0;
+        transform: translateY(30px);
+    }
+    
+    100%{ opacity: 1;
+        transform: translateX(0px);
+
+        }
+}      
+.play{
+    margin-left: 37%;
+    margin-top: 400px;
+    background-color: transparent ;
+    border-radius: 8px;
+    border-style: none;
+    width: 400px;
+    height: 80px;
+    font-weight: bold;
+    color:#D4D4D4;
+    font-size: 30px;
+    position: relative;
+    animation: moveinbottom  0.4s ease-out 0.75s;
+    animation-fill-mode: backwards;
+     font-family: 'Pokemon Solid', sans-serif;
+    
+}
+.play:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgb(0,0,0,0.2);
+}
+.play:active{
+    transform: translateY(-1px);
+    box-shadow: 0 5px 10px rgb(0,0,0,0.2);
+}
+/*.play::after{
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    border-radius: 7px;
+    transition: all .4s;
+}
+/*.play::after{background-color: #008080;}
+
+.play:hover::after{
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
+}*/
+.result-box {
+    position: absolute;
+    top: 450px; 
+    left: 52%;
+    transform: translateX(-50%);
+    display: flex; 
+    
+    gap: 5px; 
+    background-color: transparent; 
+    box-shadow : 0 0 50px white;
+}
+
+.result-input {
+    width: 40px; 
+    font-size: 24px; 
+    text-align: center;
+    border: none;
+    border-bottom: 2px solid yellow; 
+    outline: none;
+    background-color: transparent; 
+    caret-color: transparent; 
+    color: #D4D4D4;
+    font-family: 'Pokemon Solid', sans-serif;
+}
+
+.result-input:focus {
+    border-bottom-color: #007bff; 
+    caret-color: initial; 
+}
+.cardy {
+    perspective: 1000px; }
+.card-box{position: absolute;
+    top: 0px;
+    left: 10px;
+    width: 400px;
+    height: 500px;
+    border-style:solid;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    border-radius: 25px;
+    background-color: #2c2c2c;
+    border-color:rgb(50,50,50) ;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+
+    
+}
+.card-box:hover {
+    transform: translateY(-10px); /* Lift the card */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4); /* Deepen shadow */
+}
+
+
+/* Search Bar Container */
+.search-bar-container {
+    display: flex;
+    position: absolute;
+    top: 400px;
+    left: 25px;
+    
+    align-items: center;
+    position: relative;
+    width: 300px;
+    margin: 20px auto;
+    background-color: #333;
+    border: 2px solid #555;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+/* Permanent @ Symbol */
+.at-symbol {
+    color: #d4d4d4;
+    font-size: 18px;
+    margin-right: 10px;
+    font-family: 'Press Start 2P', cursive;
+}
+
+/* Input Field */
+.search-input {
+    flex: 1;
+    background-color: transparent;
+    border: none;
+    color: #d4d4d4;
+    font-size: 16px;
+    font-family: 'Press Start 2P', cursive;
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: #888;
+}
+
+/* Hover and Focus Effects */
+.search-input:focus {
+    border-bottom: 2px solid #008080;
+}
+
+.search-bar-container:hover {
+    border-color: #008080;
+}
+.err{
+    position: absolute;
+    top: 90%;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #c50808;
+    font-family: 'Pokemon Solid', sans-serif;
+}
+.display{
+    position: absolute;
+    left: 80%;
+    font-family: 'Pokemon Solid', sans-serif;
+}
+
+.skip-butt {
+    margin-left: 920px;
+    margin-top: 450px;
+    width: 200px;
+    height: 50px;
+    font-family: 'Pokemon Solid', sans-serif;
+    font-size: 15px;
+    padding: 0;
+    border-radius: 7px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.level-select{
+    position: fixed;
+    top: 50%;
+    left: 77%;
+    width: 200px;
+    height: 50px;
+    background-color:rgb(136, 136, 136,0.5);
+    font-size: 35px;
+    border-style: none;
+    border-radius: 7px;
+    
+}
+.opt{
+    background-color:rgb(136, 136, 136,0.5);
+}
+/***************************************************************/
+.level-container {
+    position:fixed;
+    top: 30%;
+    left: 65%;
+
+    display: flex;
+    
+}
+
+/* Base styling for select */
+.level-select {
+    appearance: none; /* Removes default arrow */
+    background-color: #1e1e1e;
+    color: #fff;
+    padding: 10px 40px 10px 20px;
+    border: 2px solid #ffd700;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+    position: relative;
+    cursor: pointer;
+    width: 200px;
+    font-family: inherit;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+/* Custom arrow */
+.level-select::after {
+    content: '▼';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #ffd700;
+    font-size: 12px;
+}
+
+/* Hover and focus states */
+.level-select:hover, .custom-select:focus {
+    background-color: #252525;
+    border-color: #ffda3d;
+}
+
+/* Dropdown option styling */
+.level-select option {
+    background-color: #1e1e1e;
+    color: #fff;
+}
+
+/* Focused option (when selecting via keyboard) */
+.level-select option:focus {
+    background-color: #ffda3d;
+    color: #000;
+}
+
+/* Disabled option */
+.level-select option:disabled {
+    color: #555;
+    background-color: #333;
+    cursor: not-allowed;
+}
+
+/******************************button********************************************/
+
+/* Button container to center the button */
+.next-butt {
+    text-align: center;
+}
+
+/* Advanced button */
+.skip-butt {
+    background: linear-gradient(45deg, #ff416c, #ff4b2b); /* Gradient background */
+    border: none;
+    border-radius: 12px;
+    padding: 15px 30px;
+    color: #fff;
+    font-size: 16px;
+    font-family: inherit;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.4s ease; /* Smooth transition on hover */
+    box-shadow: 0 4px 10px rgba(255, 65, 108, 0.4); /* Shadow */
+    text-transform: uppercase; /* Capital letters */
+    position: relative;
+    overflow: hidden;
+    
+}
+
+/* Button hover effect */
+.skip-butt:hover {
+    background: linear-gradient(45deg, #ff4b2b, #ff416c); /* Reverse gradient on hover */
+    box-shadow: 0 6px 12px rgba(255, 65, 108, 0.6); /* Larger shadow on hover */
+    transform: translateY(-3px); /* Lift effect */
+}
+
+/* Pseudo-element for ripple effect */
+.skip-butt::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: 50%;
+    transition: transform 0.6s ease;
+    pointer-events: none;
+}
+
+.skip-butt:active::before {
+    transform: translate(-50%, -50%) scale(1); /* Ripple animation on click */
+    transition: transform 0s; /* Stop transition after scaling */
+}
+
+/* Focus and outline styling */
+.skip-butt:focus {
+    outline: 2px solid #ff416c; /* Custom focus outline */
+}
+
+/* Disabled button styling */
+.skip-butt:disabled {
+    background: #555; /* Grayed out */
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 600px) {
+    .skip-butt {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+/************************************TIMER***************************/
+/*.holder{
+    width: 20px; 
+    height: 80%; 
+    max-height: 500px;
+    background-color: #1e1e1e;
+    border: 2px solid #ffd700;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(255, 215, 0, 0.5); /* Shadow for effect 
+    position: relative;
+}
+
+/* The time bar itself 
+.timer-box {
+    position: absolute;
+    top:105px;
+    left:72%;
+    
+    background-color: #333; /* Background of the bar before fill 
+    position: relative;
+}
+
+/* Time bar fill (vertical fill animation) 
+.timer {
+    display: block;
+    width: 100%;
+    height: 0%; /* Start from 0% height 
+    background: linear-gradient(45deg, #ff416c, #ff4b2b); /* Gradient fill 
+    border-radius: 25px;
+    transition: height 2s ease-in-out; /* Smooth vertical progress 
+    position: absolute;
+    bottom: 0; /* Start filling from the bottom 
+}
+
+/* Animated time bar (auto-fill effect vertically) 
+@keyframes fillBar {
+    0% {
+        height: 0;
+    }
+    100% {
+        height: 100%;
+    }
+}
+
+/* Animation for the vertical fill 
+.timer {
+    animation: fillBar 15s linear ; /* Adjust timing for demonstration 
+}
+
+/* Pseudo-element for shine effect 
+.timer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    filter: blur(4px);
+    opacity: 0.6;
+    transform: translateY(-100%);
+    transition: transform 2s ease-in-out;
+}
+
+/* Moving shine effect on hover 
+.timer:hover::before {
+    transform: translateY(100%);
+}
+
+/* Media query for smaller screens 
+@media (max-width: 600px) {
+    .holder{
+        width: 15px; /* Thinner for small screens 
+        height: 60%;
+    }
+    .timer {
+        animation: fillBar 15s linear ; /* Faster animation for smaller screens 
+    }
+}
+*/
+/* Base styles for mobile devices */

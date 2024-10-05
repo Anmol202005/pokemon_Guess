@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POKIGuess</title>
+    <link rel="icon" href="download__2_-removebg-preview.png">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.cdnfonts.com/css/pokemon-solid" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Section (Commented Out) -->
+    <!--
+    <header>
+        <div class="headbox">
+            <div class="img-box"><img class="logo" src="download__2_-removebg-preview.png"></div>
+            <div class="text-box">
+                <h1><span class="primary-heading">POKIGuess</span>
+                    <span class="secondary-heading">Who's this Pokémon?</span>
+                </h1>
+            </div>
+        </div>
+    </header>
+    -->
+
+    <!-- Search Bar Section -->
+     <div class="logo-box"><img src="LOGO.png" alt="LOGO"></div>
+    <div class="search-bar-container">
+        <span class="at-symbol">@</span>
+        <input type="text" class="search-input" placeholder="Enter your name!!">
+    </div>
+    <div class="err"></div>
+    
+    <!-- Play Button -->
+    <div class="play-butt">
+        <button onclick="start();shade()" class="play"><--C l i c k to p la y!!--></button>
+    </div>
+    
+    <!-- Main Game Section -->
+    <main>
+        <div class="cardy"></div>
+        <div class="holder"></div>
+        <div class="margin-box"></div>
+        <div class="result-box"></div>
+        <div class="display"></div>
+        <div class="next-butt"></div>
+        <div id="level-container" class="level-container"></div>
+    </main>
+
+    <!-- Score Display -->
+    <!--<div class="score-display">Score: <span id="score">0</span></div>-->
+
+    <!-- JavaScript -->
+    
+    <script>
+        const audio= new Audio('back.mp3');
+        audio.play();
+        var time=15;
+        var enterPressed = false;
+        let timeoutId;
+        const coll = [];
+        let vari = '';
+        let score = 0;
+        let concatenatedValue = '';
+        let correctValue;
+        
+        function displayname(){let name=document.querySelector('.search-input').value;
+        document.querySelector('.display').innerHTML=`Name : ${name}<br>Score : ${score}`;}
+        
+
+        // Start Game Function
+        async function start() {
+    const searchInput = document.querySelector('.search-input');
+    if (searchInput && searchInput.value.trim() !== "") {
+        
+        await generaterandom(coll);
+
+        document.querySelector('.err').innerHTML="";
+        const levelContainer = document.getElementById('level-container');
+        let levelSelect = levelContainer.querySelector('select');
+
+        if (!levelSelect) {
+            levelSelect = document.createElement('select');
+            levelSelect.className = 'level-select';
+            levelSelect.innerHTML = `
+                <option value="1" selected class="opt">Level 1</option>
+                <option value="2" class="opt">Level 2</option>
+                <option value="3" class="opt">Level 3</option>
+            `;
+            levelContainer.appendChild(levelSelect);
+        }
+
+        levelSelect.addEventListener('change', (event) => {
+            const selectedLevel = event.target.value;
+            setTimerDuration(selectedLevel);
+            restartGame();  // Restart the game with the new level
+        });
+    } else {
+        const existingMsg = document.querySelector('.msg');
+        if (!existingMsg) {
+            const inst = document.createElement("p");
+            inst.className = "msg";
+            inst.innerHTML = "Gotta enter your Name, Trainer!";
+            document.querySelector('.err').appendChild(inst);
+        }
+    }
+}
+
+
+        // Generate Random Pokémon Function
+        async function generaterandom(arr) {
+            
+            var r = Math.ceil(Math.random() * 1000);
+            if (!arr.includes(r)) {
+                arr.push(r);
+                const data = await fetchRandomPokemon(r); // Use async fetch
+                
+
+                if (!data) return; // Ensure data is returned correctly
+
+                const img = document.createElement('img');
+                const timer = document.createElement('div');
+                const timerbox = document.createElement('div');
+                const cardbox = document.createElement('div');
+                const back = document.querySelector('body');
+                const bimg = 'baaac.png';
+                const wait = document.createElement('img');
+                document.querySelector('.next-butt').innerHTML="";
+                
+                wait.src='wait1.png';
+                wait.className='waiter';
+
+                vari = `p${r}`;
+                correctValue = data.name.toLowerCase();
+                
+
+                cardbox.className = 'card-box';
+                timerbox.className = "timer-box";
+                timer.className = "timer";
+                timer.style.animationDuration = `${time}s`;
+                img.src = data.sprites.front_default;
+                img.width = 400;
+                img.height = 300;
+                img.className = "guessimg";
+                img.filter="brightness(0)";
+
+                back.style.backgroundColor = 'black';
+                back.style.backgroundSize = 'cover';
+
+                document.querySelector('.play-butt').innerHTML = "";
+                document.querySelector('.margin-box').innerHTML = "";
+                document.querySelector('.result-box').innerHTML = "";
+                document.querySelector('.cardy').innerHTML="";
+                document.querySelector('.cardy').appendChild(cardbox);
+                document.querySelector('.card-box').appendChild(wait);
+                document.querySelector('.margin-box').appendChild(img);
+                document.querySelector('.holder').innerHTML = "";
+                document.querySelector('.holder').appendChild(timerbox);
+                const logobox=document.querySelector('.logo-box');
+            logobox.innerHTML="";
+
+                document.querySelector('.timer-box').appendChild(timer);
+                
+                
+                displayname();
+
+                // Create result inputs
+                let l = correctValue.length;
+                for (let i = 1; i <= l; i++) {
+                    const inp = document.createElement('input');
+                    inp.className = `result-input${i} result-input`;
+                    inp.type = "text";
+                    inp.maxLength = 1;
+                    inp.dataset.index = i;
+                    inp.addEventListener('input', handleInput);
+                    inp.addEventListener('keydown', handleKeyDown);
+                    document.querySelector('.result-box').appendChild(inp);
+                }
+
+                enterPressed = false; 
+                timeoutId = setTimeout(() => {
+                    if (!enterPressed) {
+                        applyRedShadow();
+                        displayLoadingGif();
+                        fetchPokemonCard(correctValue);
+                    }
+                }, time*1000);
+            } else {
+                generaterandom(arr); 
+            }
+        }
+
+        // Input Handling Function
+        function handleInput(event) {
+            const currentInput = event.target;
+            const inputs = Array.from(document.querySelectorAll('.result-input'));
+            const currentIndex = inputs.indexOf(currentInput);
+
+            if (currentIndex < inputs.length - 1 && currentInput.value) {
+                const nextInput = inputs[currentIndex + 1];
+                nextInput.focus();
+            }
+        }
+
+        // Key Handling Function
+        function handleKeyDown(event) {
+            const currentInput = event.target;
+            const inputs = Array.from(document.querySelectorAll('.result-input'));
+            const currentIndex = inputs.indexOf(currentInput);
+
+            if (event.key === 'Backspace' && currentInput.value === '' && currentIndex > 0) {
+                const prevInput = inputs[currentIndex - 1];
+                prevInput.focus();
+            } else if (event.key === 'Enter') {
+                event.preventDefault();
+                clearTimeout(timeoutId);
+                enterPressed = true;
+                concatenatedValue = inputs.map(input => input.value).join('').toLowerCase();
+
+                if (concatenatedValue === correctValue) {
+                    score++;
+                    displayname(score);
+                    displaySuccess();
+                    displayLoadingGif();
+                    fetchPokemonCard(correctValue);
+                    
+                } else {
+                    displayFailure();
+                    displayLoadingGif();
+                    fetchPokemonCard(correctValue);
+                    
+                }
+            }
+        }
+
+        // Score Update Function
+        function updateScore() {
+            const scoreElement = document.getElementById('score');
+            scoreElement.textContent = score;
+        }
+
+        // Fetch Pokémon Card Function
+        async function fetchPokemonCard(correctValue) {
+    try {
+        const response = await fetch(`https://api.pokemontcg.io/v2/cards?q=name:${correctValue}`, {
+            headers: {
+                'X-Api-Key': 'f117c3b7-2088-4b8a-a29b-82488625dee1' // Consider moving this to a secure location
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data && data.data && data.data.length > 0) {
+            const card = data.data[0];
+            if (card.images && card.images.large) {
+                displayPokemonCard(card.images.large);
+            } else {
+                console.error('Card images not found.');
+                showFallbackImage();
+            }
+        } else {
+            console.error('No card found for this Pokémon');
+            showFallbackImage();
+        }
+    } catch (error) {
+        console.error('Error fetching Pokémon card:', error);
+        showFallbackImage();
+    }
+}
+
+// Helper function to display a fallback image
+function showFallbackImage() {
+    const fallbackImage = 'wait1.png'; // Replace with your custom fallback image path
+    displayPokemonCard(fallbackImage);
+}
+
+// Helper function to display the Pokémon card image
+function displayPokemonCard(imageUrl) {
+    const cardImage = document.createElement('img');
+    cardImage.src = imageUrl;
+    cardImage.width = 375;
+    cardImage.height = 475;
+    cardImage.alt = 'Pokémon Card';
+    cardImage.className = "pokecard";
+    
+    const cardContainer = document.querySelector('.card-box');
+    cardContainer.innerHTML = ''; // Clear previous content
+    cardContainer.appendChild(cardImage);
+    
+    // Create a "NEXT" button
+    const skipbutt = document.createElement("button");
+    skipbutt.innerHTML = "NEXT!!";
+    skipbutt.className = "skip-butt";
+    skipbutt.onclick = function() {
+        generaterandom(coll);
+    };
+    document.querySelector('.next-butt').innerHTML = "";
+    document.querySelector('.next-butt').appendChild(skipbutt);
+    
+    // Disable the input fields
+    const resultInputs = document.querySelectorAll('.result-input');
+    resultInputs.forEach(input => input.disabled = true);
+}
+
+
+        // Display Pokémon Card
+        function displayPokemonCard(cardImageUrl) {
+            const cardImage = document.createElement('img');
+            cardImage.src = cardImageUrl;
+            cardImage.width = 375;
+            cardImage.height = 475;
+            cardImage.alt = 'Pokémon Card';
+            cardImage.className = "pokecard";
+            const cardContainer = document.querySelector('.card-box');
+            cardContainer.innerHTML = '';
+            cardContainer.appendChild(cardImage);
+            var skipbutt=document.createElement("button");
+            skipbutt.innerHTML="NEXT!!"
+            skipbutt.className="skip-butt";
+            skipbutt.onclick = function() {
+    generaterandom(coll);
+};
+            document.querySelector('.next-butt').innerHTML="";
+            document.querySelector('.next-butt').appendChild(skipbutt);
+            const resultInputs = document.querySelectorAll('.result-input');
+    resultInputs.forEach(input => {
+        input.disabled = true;  // Disable the input fields
+    });
+
+        }
+
+        // Display Loading GIF
+        function displayLoadingGif() {
+            const cardContainer = document.querySelector('.card-box');
+            cardContainer.innerHTML = '<img src="pokeball.gif" class="loading-gif" alt="Loading...">';
+        }
+
+        // Apply Red Shadow for Incorrect Guess
+        function applyRedShadow() {
+            const resultBox = document.querySelector('.result-box');
+            const resultInputs = document.querySelectorAll('.result-input');
+            const guessimg = document.querySelector('.guessimg');
+
+            resultBox.style.boxShadow = '0 0 10px red';
+            resultInputs.forEach(input => input.style.borderBottomColor = 'red');
+            guessimg.style.filter = 'none';
+            guessimg.style.boxShadow = '0 0 100px red';
+        }
+
+        // Fetch Random Pokémon
+        async function fetchRandomPokemon(r) {
+            try {
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${r}`);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching Pokémon data from PokeAPI:', error);
+            }
+        }
+
+        // Success Display
+        function displaySuccess() {
+            const resultBox = document.querySelector('.result-box');
+            const resultInputs = document.querySelectorAll('.result-input');
+            const guessimg = document.querySelector('.guessimg');
+            resultBox.style.boxShadow = '0 0 10px green';
+            resultInputs.forEach(input => input.style.borderBottomColor = 'green');
+            guessimg.style.boxShadow = '0 0 100px green';
+            guessimg.style.filter = 'none';
+        }
+
+        // Failure Display
+        function displayFailure() {
+            applyRedShadow();
+        }
+        function setTimerDuration(level) {
+    const timerElement = document.querySelector('.timer');
+    if (timerElement) {
+        if (level === "1") {
+             
+            time=15; // Level 1: 15 seconds
+        } else if (level === "2") {
+            
+            time=10;
+        } else if (level === "3") {
+            
+            time=5;
+        }
+    }
+}
+async function restartGame() {
+    coll.length = 0; // Clear the array to avoid repeating Pokémon
+    score = 0; // Reset score
+    document.querySelector('.play-butt').innerHTML = '<button onclick="start()" class="play"><--C l i c k to p la y!!--></button>'; // Recreate the play button
+    document.querySelector('.cardy').innerHTML = ""; // Clear Pokémon image
+    document.querySelector('.result-box').innerHTML = ""; // Clear result inputs
+    document.querySelector('.holder').innerHTML = ""; // Clear timer
+    document.querySelector('.display').innerHTML = ""; // Clear display
+    document.querySelector('.next-butt').innerHTML = ""; // Clear next button
+    
+    const levelContainer = document.getElementById('level-container');
+    const levelSelect = levelContainer.querySelector('select');
+    const selectedLevel = levelSelect ? levelSelect.value : "1"; // Default to level 1 if not set
+    const resultBox = document.querySelector('.result-box');
+            const resultInputs = document.querySelectorAll('.result-input');
+            const guessimg = document.querySelector('.guessimg');
+            resultBox.style.boxShadow = '0 0 10px white';
+            
+
+    setTimerDuration(selectedLevel);
+    await generaterandom(coll); // Generate a new Pokémon according to the current level
+}
+function shade(){
+    const resultBox = document.querySelector('.result-box');
+            const resultInputs = document.querySelectorAll('.result-input');
+            const guessimg = document.querySelector('.guessimg');
+            resultBox.style.boxShadow = '0 0 10px white';
+            resultInputs.forEach(input => input.style.borderBottomColor = 'white');
+            guessimg.style.boxShadow = '0 0 100px white';
+}
+
+
+    </script>
+</body>
+</html>
